@@ -14,16 +14,23 @@ html, body {
   position: absolute;
   top : 40px;
   width: 200px;
-  background-color: #F5F5DC;
   border-radius: 5%;
   margin-left: 5px;
+  max-height: 90%;
+  overflow: auto;
 }
 
 nav {
-  margin-left: 0;
+  padding: 5px;
+  border-radius: 5%;
+  background-color: #F5F5DC;
+  border: 1px black solid;
 }
 .places-name{
   cursor: pointer;
+}
+.places-name p{
+  font-size: 10px;
 }
 .bar-title{
   padding-left: 5px;
@@ -56,6 +63,7 @@ button{
   display: block;
   background-color: #F8F8FF;
   border-radius: 10%;
+  height: 55px;
 }
 .forecast-Icon{
   height: 100%;
@@ -75,4 +83,5 @@ button{
 }
 .forecast-detail table{
   margin: 10px;
+  line-height: 5px;
 }

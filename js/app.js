@@ -1,6 +1,7 @@
 var map;
 var streetViewImage;
-var streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
+var streetViewUrl = "https://maps.googleapis.com/maps/api/streetview?size=180x90&location=";
+var infowindow;
 // Model
 var markers = ko.observableArray([
   {
@@ -53,11 +54,14 @@ var markers = ko.observableArray([
 // View
 // google callback function
 function initMap(){
-    map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById("map"), {
     zoom: 13,
     center: {lat: 42.3586626, lng: -71.1020217}
   });
     setAllMap();
+}
+function mapError(){
+  window.alart('google map cannot be loaded!');
 }
 //set markers with the data in Model
 function setAllMap() {
@@ -70,20 +74,19 @@ function setAllMap() {
       title: markers()[i].title
       });
       // set conten string
-      markers()[i].contentString = '<img src = "'+ getStreetView(i) +
-                                '" + alt = "Street view"><p><strong>' +
-                                markers()[i].title + '</strong></p><br><p>' +
-                                markers()[i].streetAddress + '<br>' +
-                                markers()[i].cityAddress + '<br></p>';
+      markers()[i].contentString = "<img src = '"+ getStreetView(i) +
+                                "' + alt = 'Street view'><p><strong>" +
+                                markers()[i].title + "</strong></p><br><p>" +
+                                markers()[i].streetAddress + "<br>" +
+                                markers()[i].cityAddress + "<br></p>";
       // set the info window with each marker's content
-      markers()[i].infowindow = new google.maps.InfoWindow({
-            content: markers()[i].contentString
-      });
+      infowindow = new google.maps.InfoWindow();
       // add event listener to the markers to open the info window
-      new google.maps.event.addListener(markers()[i].holdMarker, 'click',
+      new google.maps.event.addListener(markers()[i].holdMarker, "click",
       (function(marker, i) {
           return function() {
-            markers()[i].infowindow.open(map,this);
+            infowindow.setContent(marker.contentString);
+            infowindow.open(map,this);
             marker.holdMarker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function(){
             marker.holdMarker.setAnimation(null);
@@ -95,8 +98,8 @@ function setAllMap() {
 // get the google street view source
 function getStreetView(i){
   return streetViewImage = streetViewUrl +
-                markers()[i].streetAddress + ',' + markers()[i].cityAddress +
-                '&fov=75&heading=' + '5' + '&pitch=10';
+                markers()[i].streetAddress + "," + markers()[i].cityAddress +
+                "&fov=75&heading='5'&pitch=10";
 };
 
 
@@ -114,7 +117,8 @@ var viewModel = function(){
   this.markers(markers());
   // add click event to place list
   this.openInfoWindow = function(data){
-    data.infowindow.open(map, data.holdMarker)
+    infowindow.setContent(data.contentString);
+    infowindow.open(map, data.holdMarker);
     data.holdMarker.setAnimation(google.maps.Animation.BOUNCE);
     var windowWidth = $(window).width();
             if(windowWidth <= 1080) {
@@ -128,15 +132,17 @@ var viewModel = function(){
   };
 
   // filter the name of place
-  this.query = ko.observable('');
+  this.query = ko.observable("");
   this.filterName = ko.dependentObservable(function(){
     var search = self.query().toLowerCase();
     return ko.utils.arrayForEach(self.markers(), function(marker) {
       if (marker.title.toLowerCase().indexOf(search) >= 0) {
+        marker.holdMarker.setVisible(true);
               return marker.visible(true);
-          } else {
+      } else {
+        marker.holdMarker.setVisible(false);
               return marker.visible(false);
-          }
+      }
     });
   });
   // reset the map
@@ -151,7 +157,7 @@ var viewModel = function(){
   };
   this.closeInfoWindow = function(){
     for(var i =0; i < self.markers().length; i++){
-      self.markers()[i].infowindow.close();
+      infowindow.close();
     };
   };
   this.totalReset = function() {
@@ -169,20 +175,24 @@ var viewModel = function(){
   }
 
   // get weather api
-  var weatherUrl = 'http://api.openweathermap.org/data/2.5/weather?q=Boston,MA'+
-  '&APPID=9f4e38bd4ae0460219226b9be45eae99';
+  var weatherUrl = "http://api.openweathermap.org/data/2.5/weather?q=Boston,MA"+
+  "&APPID=9f4e38bd4ae0460219226b9be45eae99";
   $.getJSON(weatherUrl, function(data){
     var temp = Math.round(data.main.temp-273.15);
     var iconId = data.weather[0].icon;
-    $('.forecast-detail table').append('<tr><td></td>'+
-                               '<td><strong> Boston weather </strong></td>'+
-                               '<td></td></tr>');
-    $('.forecast-detail table').append('<tr><td>' +
-                                   '<img src = "http://openweathermap.org/img/w/'+
-                                   iconId+'.png" alt = "weather icon"></td>'+
-                                   '<td>' + data.weather[0].description +'</td>'+
-                                   '<td>'+ temp +'˚C</td></tr>');
-  });
+    $(".forecast-detail table").append("<tr><td></td>"+
+                               "<td><strong> Boston weather </strong></td>"+
+                               "<td></td></tr>");
+    $(".forecast-detail table").append("<tr><td>" +
+                                   "<img src = 'http://openweathermap.org/img/w/"+
+                                   iconId+".png' alt = 'weather icon'></td>"+
+                                   "<td>" + data.weather[0].description +"</td>"+
+                                   "<td>"+ temp +"˚C</td></tr>");
+  })
+  .fail(function(){
+        $(".forecast-detail").append('<p style="text-align: center;">Sorry! Weather'+
+         '</p><p style="text-align: center;">Could Not Be Loaded</p>');
+    });
 
   this.showForecast = ko.observable(false);
   this.toggleForecast = function(){

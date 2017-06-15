@@ -5,65 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
-    <link rel = 'stylesheet' href = 'css/bootstrap.min.css'>
-    <link rel = 'stylesheet' href = 'css/style.css'>
+    <link rel = "stylesheet" href = "css/bootstrap.min.css">
+    <link rel = "stylesheet" href = "css/style.css">
     <script
      src="https://code.jquery.com/jquery-3.2.1.min.js">
      </script>
   </head>
   <body>
     <!-- sidebar for search and neighborhood list -->
-    <div class = 'container'>
-      <nav data-bind = 'visible: showOfBar'>
-        <h1 class = 'bar-title'>Neighborhood Map</h1>
+    <div class = "container">
+      <nav data-bind = "visible: showOfBar">
+        <h1 class = "bar-title">Neighborhood Map</h1>
         <!-- search bar part -->
-        <div class = 'search bar'>
-          <input type = 'text' placeholder="Search places"
+        <div class = "search bar">
+          <input type = "text" placeholder="Search places"
             data-bind="textInput: query, valueUpdate: ['afterkeydown']">
           </input>
         </div>
         <br>
         <!-- list of places -->
-        <div class = 'neighboor list' >
-          <ul data-bind = 'foreach: markers'>
-            <li class = 'places-name' data-bind = 'click: $parent.openInfoWindow,
-            visible: $data.visible'>
-              <strong data-bind = 'text: $data.title'></strong>
-              <p data-bind = 'text: $data.streetAddress +$data.cityAddress'></p>
+        <div class = "neighbor-list" >
+          <ul data-bind = "foreach: markers">
+            <li class = "places-name" data-bind = "click: $parent.openInfoWindow,
+            visible: $data.visible">
+              <strong data-bind = "text: $data.title"></strong>
+              <p data-bind = "text: $data.streetAddress+' '+$data.cityAddress"></p>
             </li>
           </ul>
         </div>
       </nav>
       <!-- hider the bar -->
-      <button type="button" data-bind = 'click: toggleBar'>
+      <button type="button" data-bind = "click: toggleBar">
         Search bar
       </button>
     </div>
-    <button type ='button' class = 'resetBtn' data-bind = 'click: totalReset'>
+    <button type ="button" class = "resetBtn" data-bind = "click: totalReset">
       Reset
     </button>
     <!-- forcast -->
-    <div class = 'forecast'>
-      <div class = 'forecast-Icon' data-bind = 'click: toggleForecast'>
-        <img src = 'img/weather-icon.jpg'>
+    <div class = "forecast">
+      <div class = "forecast-Icon" data-bind = "click: toggleForecast">
+        <img src = "img/weather-icon.jpg">
       </div>
-      <div class = 'forecast-detail' data-bind = 'visible: showForecast'>
+      <div class = "forecast-detail" data-bind = "visible: showForecast">
         <table>
         </table>
       </div>
     </div>
 
     <!-- place for map -->
-    <div id = 'map'></div>
+    <div id = "map"></div>
 
-    <script src = 'js/knockout-3.4.2.js'></script>
-    <script src = 'js/app.js'></script>
+    <script src = "js/knockout-3.4.2.js"></script>
+    <script src = "js/app.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjssHruvzXXP7X2u2D2b2LS6ZpDv2XPPE&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjssHruvzXXP7X2u2D2b2LS6ZpDv2XPPE&callback=initMap"
+        onerror="mapError()">
     </script>
-
-
-
 
  </body>
 </html>
