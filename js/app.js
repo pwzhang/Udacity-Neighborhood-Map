@@ -61,7 +61,7 @@ function initMap(){
     setAllMap();
 }
 function mapError(){
-  window.alart('google map cannot be loaded!');
+  window.alert('google map cannot be loaded!');
 }
 //set markers with the data in Model
 function setAllMap() {
@@ -94,6 +94,7 @@ function setAllMap() {
       };
     })(markers()[i], i));
   };
+  ko.applyBindings(new viewModel);
 };
 // get the google street view source
 function getStreetView(i){
@@ -201,5 +202,3 @@ var viewModel = function(){
 
 
 };
-
-ko.applyBindings(new viewModel);
