@@ -26,6 +26,15 @@ nav {
   background-color: #F5F5DC;
   border: 1px black solid;
 }
+
+.neighbor-list ul{
+  padding-left: 5px;
+}
+
+.neighbor-list ul li{
+  list-style: none;
+}
+
 .places-name{
   cursor: pointer;
 }
